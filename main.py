@@ -13,5 +13,5 @@ input_file = 'project_video.mp4'
 
 # run the pipeline and generate the ouput video
 video = VideoFileClip(input_file)
-annotated_video = video.fl_image(pipeLine.pipeLine)
+annotated_video = video.fl_image(pipeLine.processImage)
 annotated_video.write_videofile(output_file, audio=False)
