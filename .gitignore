@@ -1,2 +1,3 @@
 # ignore the images of our dataset
 *.png
+*.pyc
