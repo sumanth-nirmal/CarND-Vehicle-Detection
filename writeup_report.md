@@ -58,6 +58,12 @@ The code for this is available in *classifier.py* to run this` python classifier
 The basic idea of sliding window from the class is used here and the code can be found in *detectCar()* in *hog_features.py*. The HOG features are first extracted for the entire lower half of image and is then subsampled for each sliding window. 
 It just steps through the X and Y axes and moves by cells_per_step extracting the features along the way.
 
+Instead of searching the whole image for cars I search on the lower half of the image to improve the speed and accuracy (as we know that the maximum probability of finding the car will be in this are), so used ystart = 400 and ystop = 656 (fixed these values after many trails). window is defined by a scaling factor *cell_per_block* which deascribes the overlap of each window in terms of cell distance. I have tried with different cell sizes of 1.2, 1.5, 1.8 but 1.5 seems promising. 
+(The key here is that cars that are closer will require a larger window than cars that are on the horizon, so the optimum value which is not too small nor larger should be selected)
+I tried various values of overlap on a sample image and chose the one which gave me most accurate boxes
+
+Therefore, I used y_start = 400 and y_stop = 656 and a scale of 1.5. This ensures that I'm only searching in the areas where i would find a car. The overlap helps in searching through all the pixels and looking for the car. .
+
 I use probability estimates which gave more accurate detections and features are extracted using YCrCB 3-channel HOG extraction plus spatially binned color and histograms of color in the feature vector, this can be seen on some of the test images
 
 ![sl1](./output_images/sliding/op1.jpg)           
