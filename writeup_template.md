@@ -1,5 +1,6 @@
-##Writeup Template
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
+## Vehicle Detection and Tracking
+
+This is project done as a part of Udacity Slef driving car engineer nano degree (https://www.udacity.com/drive).
 
 ---
 
@@ -14,95 +15,70 @@ The goals / steps of this project are the following:
 * Run your pipeline on a video stream (start with the test_video.mp4 and later implement on full project_video.mp4) and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
 * Estimate a bounding box for vehicles detected.
 
-[//]: # (Image References)
-[image1]: ./examples/car_not_car.png
-[image2]: ./examples/HOG_example.jpg
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
-[image5]: ./examples/bboxes_and_heat.png
-[image6]: ./examples/labels_map.png
-[image7]: ./examples/output_bboxes.png
-[video1]: ./project_video.mp4
 
-## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
-###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
+## Histogram of Oriented Gradients (HOG)
 
----
-###Writeup / README
+Histogram of Oriented Gradients (HOG) is an approach to get the features, this is implemented in *hog_features.py* as`fetchHOGFeatures`Hog features were extracted from both cars and non-cars. 
+The following parameters are used for HOG:
+* colour space = 'YCrCb'
+* orient = 9
+* pix_per_cell = 8
+* cell_per_block = 2
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
+The below images shows the features, features are extracted on all color channels, shown below:
 
-You're reading it!
+Input Image         |     channel 1 HOG features  | channel 2 HOG features | channel 3 HOG features      
+---------------------------  | ------------ | ------------- | -----------------------
+![d1](./corrected_images/hog/input1.jpg)  | ![d2](./corrected_images/hog/output11.jpg) |
+![d3](./corrected_images/hog/output12.jpg) | ![d4](./corrected_images/hog/output13.jpg)
+---------------------------  | ------------ | ------------- | -----------------------
+![d5](./corrected_images/hog/input1.jpg)  | ![d6](./corrected_images/hog/output11.jpg) |
+![d7](./corrected_images/hog/output12.jpg) | ![d8](./corrected_images/hog/output13.jpg)
 
-###Histogram of Oriented Gradients (HOG)
+The HOG parameters are basically determined through trial and error. Orientation9 gave optimal results and 8 pixels per cell are choosen as its the size of the features. ALL channels are used to extract the features as it gives more information. YCrCb color space is used so it can also detect the white cars. hoistogram bins are choosen as 32 and cloor histogram and spatial binning is acheived using the functions `fetchHistFeatures` and `fetchSpatialBins`  in *hog_features.py*
 
-####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
+## Training the Classifier
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+I used a support vector classifier with probability set to true. though this approach takes more time this provided more features being detected (Its a tradeoff). First the features were extracted and shuffled (To make sure it doesnt overfit). Then the data was split into training data and testing data with a 0.2 split. Then the model was trained and saved as a pcikle file
 
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
+The code for this is available in *classifier.py* to run this` python classifier.py` this should get the features train a classifier and finally save the model as *model.p* (pickle file)
 
-![alt text][image1]
+## Sliding Window Search
 
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+The basic idea of sliding window from the class is used here and the code can be found in *detectCar()* in *hog_features.py*. The HOG features are first extracted for the entire lower half of image and is then subsampled for each sliding window. 
+It just steps through the X and Y axes and moves by cells_per_step extracting the features along the way.
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+I use probability estimates which gave more accurate detections and features are extracted using YCrCB 3-channel HOG extraction plus spatially binned color and histograms of color in the feature vector, this can be seen on some of the test images
 
+![sl1](./corrected_images/sliding/op1.jpg)
+![sl2](./corrected_images/sliding/op2.jpg)
+![sl3](./corrected_images/sliding/op3.jpg)
+![sl4](./corrected_images/sliding/op4.jpg)
+![sl5](./corrected_images/sliding/op5.jpg)
+![sl6](./corrected_images/sliding/op6.jpg)
 
-![alt text][image2]
+## Video Implementation
 
-####2. Explain how you settled on your final choice of HOG parameters.
+The working video can be seen [here](https://www.youtube.com/watch?v=8u36mS0113o&feature=youtu.be)
 
-I tried various combinations of parameters and...
+The idea to reduce the false positives is to use heat map though the classifier and feature extraction. the heat map is implemented as a function `addHeatMap()` in *hog_features.py*. Also used threshold which is implemented as `applythreshold()` in *hog_features.py*
+*(anyways the false positive in this video with the current setup are very low)
 
-####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+The basic idea of a heat map generation is to innitialize heat-map image with dimension equals to the dimension of the input images and add +1 for all pixels within windows where car ois detected by classifier, so these parts are the cars and by imposing a threshold other areas are rejected (which are also false positives)
 
-I trained a linear SVM using...
+The heat map and thresholded images are shown below (applied on test images):
 
-###Sliding Window Search
+Input Image         |     Heat Map  | Thresholded   
+---------------------------  | ------------ | ------------- 
+![i1](./test_images/test4.jpg)  | ![h1](./corrected_images/pipeline/heatmap4.jpg) |
+![t1](./corrected_images/pipeline/threshold4.jpg)
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+The bounding box drawn on the above detected image
+![bb1](./corrected_images/pipeline/boundingbox4.jpg)
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+## Discussion
 
-![alt text][image3]
-
-####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
-
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
-
-![alt text][image4]
----
-
-### Video Implementation
-
-####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video.mp4)
-
-
-####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
-
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
-
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
-
-### Here are six frames and their corresponding heatmaps:
-
-![alt text][image5]
-
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
-![alt text][image6]
-
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
-
-
-
----
-
-###Discussion
-
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
-
+* Getting false positives to zero is a challenge, though this particular input video has very little, but with a different input video this could really be challenging. One way to get to zero is by using heat maps as we used and thresholding the images.
+* Also the hog method is very resource consuming, any alternative for this would improve the timing for training
+* the pipeline can fail when there are shadows
+* Using latest deppe learning methods to detect the features may be more promising
