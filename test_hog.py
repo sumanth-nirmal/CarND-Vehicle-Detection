@@ -9,6 +9,8 @@ import glob
 import pickle
 import cv2
 import matplotlib.pyplot as plt
+import numpy as np
+from scipy.ndimage.measurements import label
 
 ###############################################################################
 # test the pipeline on images
@@ -109,3 +111,35 @@ for fname in images:
     plt.clf()
     plt.imshow(out_img)
     plt.savefig('output_images/sliding/op' + str(count) + '.jpg')
+
+###############################################################################
+# test on the pipline with individual stages stored
+
+count = 0;
+for fname in images:
+    img = cv2.imread(fname)
+    count +=1
+    image_copy = np.copy(img)
+    #get features
+    out_img, detected = hog_features.detectCar(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block,
+                                  spatial_size,hist_bins)
+
+    # get heatmap
+    heatmap = np.zeros(out_img.shape)
+    heatmap = hog_features.addHeatMap(heatmap, detected)
+    plt.clf()
+    plt.imshow(heatmap)
+    plt.savefig('output_images/pipeline/heatmap' + str(count) + '.jpg')
+
+    # threshold it
+    heatmap = hog_features.applyThreshold(heatmap, 0)
+    labels = label(heatmap)
+    plt.clf()
+    plt.imshow(heatmap)
+    plt.savefig('output_images/pipeline/threshold' + str(count) + '.jpg')
+
+    # draw bounding box
+    draw_img = hog_features.drawLabeledBoundingBoxes(np.copy(image_copy), labels)
+    plt.clf()
+    plt.imshow(out_img)
+    plt.savefig('output_images/pipeline/boundingbox' + str(count) + '.jpg')
