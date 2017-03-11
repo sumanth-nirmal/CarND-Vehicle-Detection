@@ -28,22 +28,22 @@ The following parameters are used for HOG:
 The below images shows the features, features are extracted on all color channels, shown below:
 
 Image with car     
-![d1](./output_images/hog/input1.jpg =516x140)
+![d1](./output_images/hog/input1.jpg)                 
 channel 1 HOG features      
-![d2](./output_images/hog/output11.jpg) 
-channel 2 HOG features     
-![d3](./output_images/hog/output12.jpg) 
+![d2](./output_images/hog/output11.jpg)         
+channel 2 HOG features      
+![d3](./output_images/hog/output12.jpg)            
 channel 3 HOG features     
-![d4](./output_images/hog/output13.jpg)
+![d4](./output_images/hog/output13.jpg)             
 
 Image with out car      
-![d5](./output_images/hog/input2.jpg)  
+![d5](./output_images/hog/input2.jpg)             
 channel 1 HOG features     
-![d6](./output_images/hog/output21.jpg)
+![d6](./output_images/hog/output21.jpg)             
 channel 2 HOG features     
-![d7](./output_images/hog/output22.jpg) 
+![d7](./output_images/hog/output22.jpg)             
 channel 3 HOG features       
-![d8](./output_images/hog/output23.jpg)
+![d8](./output_images/hog/output23.jpg)                  
 
 The HOG parameters are basically determined through trial and error. Orientation9 gave optimal results and 8 pixels per cell are choosen as its the size of the features. ALL channels are used to extract the features as it gives more information. YCrCb color space is used so it can also detect the white cars. hoistogram bins are choosen as 32 and cloor histogram and spatial binning is acheived using the functions `fetchHistFeatures` and `fetchSpatialBins`  in *hog_features.py*
 
@@ -60,12 +60,9 @@ It just steps through the X and Y axes and moves by cells_per_step extracting th
 
 I use probability estimates which gave more accurate detections and features are extracted using YCrCB 3-channel HOG extraction plus spatially binned color and histograms of color in the feature vector, this can be seen on some of the test images
 
-![sl1](./output_images/sliding/op1.jpg)
-![sl2](./output_images/sliding/op2.jpg)
-![sl3](./output_images/sliding/op3.jpg)
-![sl4](./output_images/sliding/op4.jpg)
-![sl5](./output_images/sliding/op5.jpg)
-![sl6](./output_images/sliding/op6.jpg)
+![sl1](./output_images/sliding/op1.jpg)           
+![sl3](./output_images/sliding/op3.jpg)             
+![sl4](./output_images/sliding/op4.jpg)               
 
 ## Video Implementation
 
