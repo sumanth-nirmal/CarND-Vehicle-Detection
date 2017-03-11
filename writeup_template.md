@@ -76,7 +76,8 @@ The basic idea of a heat map generation is to innitialize heat-map image with di
 The heat map and thresholded images are shown below (applied on test images):
 
 Input Image                 
-![i1](./test_images/test1.jpg)                      
+![i1](./test_images/test3.jpg)                
+
  Heat Map                          
 ![h1](./output_images/pipeline/heatmap1.jpg)                            
 
