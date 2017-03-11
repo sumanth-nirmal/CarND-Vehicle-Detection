@@ -63,9 +63,6 @@ def trainClassifier(color_space, spatial_size, hist_bins, orient, pix_per_cell, 
     rand_state = np.random.randint(0, 100)
     X_train, X_test, y_train, y_test = train_test_split(scaled_X, y, train_size=0.2, random_state=42) #rand_state)
 
-    # X_train = np.vstack([X_train, supplement_features])
-    # y_train = np.append(y_train, np.ones(len(supplement_features)))
-
     print('Using:', orient, 'orientations', pix_per_cell, 'pixels per cell and', cell_per_block, 'cells per block')
     print('Feature vector length:', len(X_train))
     print('class: ',len(y_train))
