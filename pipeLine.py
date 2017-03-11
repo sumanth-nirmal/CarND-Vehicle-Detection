@@ -3,13 +3,11 @@
 ## Date: March 10,2017
 # main file running the vehicle detcetion and tracking pipeline
 
-
-import pickle
-from scipy.ndimage.measurements import label
-import classifier
 import hog_features
+import classifier
+import pickle
 import numpy as np
-from moviepy.editor import VideoFileClip
+from scipy.ndimage.measurements import label
 
 # parameters
 color_space = 'YCrCb'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
@@ -28,9 +26,8 @@ scale = 1.5
 
 # train the classifier
 #classifier.trainClassifier(color_space, spatial_size, hist_bins, orient,
-#1                             pix_per_cell, cell_per_block, hog_channel, spatial_feat, hist_feat, hog_feat)
+#                             pix_per_cell, cell_per_block, hog_channel, spatial_feat, hist_feat, hog_feat)
 
-#classifier.trainClassifier()
 # loda the model
 with open('model.p', 'rb') as f:
     model = pickle.load(f)
@@ -48,7 +45,7 @@ def processImage(img):
     heatmap = np.zeros(out_img.shape)
     heatmap = hog_features.addHeatMap(heatmap, detected)
     heatmap = hog_features.applyThreshold(heatmap, 0)
-    labels = hog_features.label(heatmap)
+    labels = label(heatmap)
 
     # Draws bounding boxes on a copy of the image
     draw_img = hog_features.drawLabeledBoundingBoxes(np.copy(image_copy), labels)
