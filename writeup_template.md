@@ -29,11 +29,11 @@ The below images shows the features, features are extracted on all color channel
 
 Input Image         |     channel 1 HOG features  | channel 2 HOG features | channel 3 HOG features      
 ---------------------------  | ------------ | ------------- | -----------------------
-![d1](./corrected_images/hog/input1.jpg)  | ![d2](./corrected_images/hog/output11.jpg) |
-![d3](./corrected_images/hog/output12.jpg) | ![d4](./corrected_images/hog/output13.jpg)
+![d1](./output_images/hog/input1.jpg)  | ![d2](./output_images/hog/output11.jpg) |
+![d3](./output_images/hog/output12.jpg) | ![d4](./output_images/hog/output13.jpg)
 ---------------------------  | ------------ | ------------- | -----------------------
-![d5](./corrected_images/hog/input1.jpg)  | ![d6](./corrected_images/hog/output11.jpg) |
-![d7](./corrected_images/hog/output12.jpg) | ![d8](./corrected_images/hog/output13.jpg)
+![d5](./output_images/hog/input1.jpg)  | ![d6](./output_images/hog/output11.jpg) |
+![d7](./output_images/hog/output12.jpg) | ![d8](./output_images/hog/output13.jpg)
 
 The HOG parameters are basically determined through trial and error. Orientation9 gave optimal results and 8 pixels per cell are choosen as its the size of the features. ALL channels are used to extract the features as it gives more information. YCrCb color space is used so it can also detect the white cars. hoistogram bins are choosen as 32 and cloor histogram and spatial binning is acheived using the functions `fetchHistFeatures` and `fetchSpatialBins`  in *hog_features.py*
 
@@ -50,12 +50,12 @@ It just steps through the X and Y axes and moves by cells_per_step extracting th
 
 I use probability estimates which gave more accurate detections and features are extracted using YCrCB 3-channel HOG extraction plus spatially binned color and histograms of color in the feature vector, this can be seen on some of the test images
 
-![sl1](./corrected_images/sliding/op1.jpg)
-![sl2](./corrected_images/sliding/op2.jpg)
-![sl3](./corrected_images/sliding/op3.jpg)
-![sl4](./corrected_images/sliding/op4.jpg)
-![sl5](./corrected_images/sliding/op5.jpg)
-![sl6](./corrected_images/sliding/op6.jpg)
+![sl1](./output_images/sliding/op1.jpg)
+![sl2](./output_images/sliding/op2.jpg)
+![sl3](./output_images/sliding/op3.jpg)
+![sl4](./output_images/sliding/op4.jpg)
+![sl5](./output_images/sliding/op5.jpg)
+![sl6](./output_images/sliding/op6.jpg)
 
 ## Video Implementation
 
@@ -70,11 +70,11 @@ The heat map and thresholded images are shown below (applied on test images):
 
 Input Image         |     Heat Map  | Thresholded   
 ---------------------------  | ------------ | ------------- 
-![i1](./test_images/test4.jpg)  | ![h1](./corrected_images/pipeline/heatmap4.jpg) |
-![t1](./corrected_images/pipeline/threshold4.jpg)
+![i1](./test_images/test4.jpg)  | ![h1](./output_images/pipeline/heatmap4.jpg) |
+![t1](./output_images/pipeline/threshold4.jpg)
 
 The bounding box drawn on the above detected image
-![bb1](./corrected_images/pipeline/boundingbox4.jpg)
+![bb1](./output_images/pipeline/boundingbox4.jpg)
 
 ## Discussion
 
